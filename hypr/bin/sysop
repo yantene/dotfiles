@@ -2,7 +2,7 @@
 
 case `echo -e "Lock\\nHybrid Sleep\\nSuspend\\nHibernate\\nReboot\\nShutdown" | wofi --dmenu --insensitive --cache-file=/dev/null` in \
   "Lock") \
-    swaylock;; \
+    hyprlock;; \
   "Hybrid Sleep") \
     systemctl hybrid-sleep;; \
   "Suspend") \
