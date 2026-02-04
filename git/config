@@ -7,7 +7,7 @@
 [alias]
   co = checkout
   ci = commit
-  sw = switch
+  w = switch
   rs = restore
   commend = commit --amend --no-edit
   unadd = reset HEAD # indexをHEADに変更
