@@ -1,19 +1,35 @@
 /* ═══════════════════════════════════════════════════════════════
-   AURORA - Glassmorphism Waybar Theme (Slim)
+   MATERIAL YOU - Google Material Design 3 Waybar Theme
+   Reload: pkill -SIGUSR2 waybar
    ═══════════════════════════════════════════════════════════════ */
 
 * {
-  font-family: "Monaspace Krypton", "Noto Sans Mono CJK JP", "Symbols Nerd Font", monospace;
+  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", "Symbols Nerd Font", sans-serif;
   font-size: 12px;
   font-weight: 500;
   min-height: 0;
   padding: 0;
   margin: 0;
+  border: none;
+  background: transparent;
+}
+
+separator {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+box {
+  background: transparent;
+  padding: 0;
+  margin: 0;
 }
 
 window#waybar {
-  background: transparent;
-  color: #cdd6f4;
+  background: #1a2327;
+  color: #e0f2f1;
+  border-bottom: 1px solid #37474f;
 }
 
 window#waybar.hidden {
@@ -21,45 +37,41 @@ window#waybar.hidden {
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Tooltip
+   Tooltip - Surface Container
    ───────────────────────────────────────────────────────────────── */
 tooltip {
-  background: rgba(24, 24, 37, 0.9);
-  border: 1px solid rgba(137, 180, 250, 0.3);
-  border-radius: 8px;
-  padding: 6px 10px;
+  background: #1a2f2f;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 tooltip label {
-  color: #cdd6f4;
+  color: #e0f2f1;
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Base Module Styling - Floating Glass Pills
+   Surface Containers
    ───────────────────────────────────────────────────────────────── */
 .modules-left,
-.modules-center,
 .modules-right {
-  background: rgba(24, 24, 37, 0.75);
-  border-radius: 10px;
-  margin: 3px 0;
-  padding: 0 2px;
-  border: 1px solid rgba(137, 180, 250, 0.15);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  background: transparent;
+  margin: 0;
+  padding: 0;
 }
 
 .modules-left {
-  margin-left: 6px;
+  margin-left: 0;
+  border-radius: 0;
 }
 
 .modules-right {
-  margin-right: 6px;
+  margin-right: 0;
+  border-radius: 0;
 }
 
-.modules-center {
-  margin: 3px 0;
-}
-
+/* Base module styling */
 #cpu,
 #memory,
 #temperature,
@@ -71,46 +83,57 @@ tooltip label {
 #idle_inhibitor,
 #custom-ip {
   padding: 2px 10px;
-  margin: 2px 0;
-  border-radius: 8px;
+  margin: 0;
+  border-radius: 5px;
   background: transparent;
-  color: #cdd6f4;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #b2dfdb;
+  transition: all 0.2s ease;
+}
+
+/* Hover state - State Layer */
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#battery:hover,
+#network:hover,
+#pulseaudio:hover,
+#clock:hover,
+#custom-ip:hover,
+#idle_inhibitor:hover {
+  background: rgba(77, 208, 225, 0.12);
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Workspaces
+   Workspaces - Navigation Rail Style
    ───────────────────────────────────────────────────────────────── */
 #workspaces {
-  padding: 0 2px;
+  padding: 0;
 }
 
 #workspaces button {
-  padding: 2px 10px;
-  margin: 2px 1px;
+  padding: 2px 12px;
+  margin: 0;
   background: transparent;
-  color: rgba(205, 214, 244, 0.6);
+  color: #80cbc4;
   border: none;
-  border-radius: 6px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 5px;
+  transition: all 0.2s ease;
 }
 
 #workspaces button:hover {
-  background: rgba(137, 180, 250, 0.15);
-  color: #89b4fa;
+  background: rgba(77, 208, 225, 0.12);
+  color: #e0f2f1;
 }
 
 #workspaces button.active {
-  background: linear-gradient(135deg, #89b4fa 0%, #b4befe 100%);
-  color: #1e1e2e;
-  font-weight: 600;
-  box-shadow: 0 1px 6px rgba(137, 180, 250, 0.4);
+  background: #004d40;
+  color: #4dd0e1;
+  font-weight: 500;
 }
 
 #workspaces button.urgent {
-  background: linear-gradient(135deg, #f38ba8 0%, #eba0ac 100%);
-  color: #1e1e2e;
-  animation: urgent-pulse 1.5s ease-in-out infinite;
+  background: #bf360c;
+  color: #ffccbc;
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -118,180 +141,138 @@ tooltip label {
    ───────────────────────────────────────────────────────────────── */
 #window {
   padding: 2px 12px;
-  color: rgba(205, 214, 244, 0.8);
+  margin: 0;
+  color: #b2dfdb;
   font-weight: 400;
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   System Modules - Subtle Color Accents
+   System Modules - On Surface Colors
    ───────────────────────────────────────────────────────────────── */
 
-/* CPU - Peach */
+/* CPU */
 #cpu {
-  color: #fab387;
-}
-#cpu:hover {
-  background: rgba(250, 179, 135, 0.15);
+  color: #4dd0e1;
 }
 
-/* Memory - Green */
+#cpu.warning {
+  color: #ffcc80;
+}
+
+#cpu.critical {
+  background: #bf360c;
+  color: #ffccbc;
+}
+
+/* Memory */
 #memory {
-  color: #a6e3a1;
-}
-#memory:hover {
-  background: rgba(166, 227, 161, 0.15);
+  color: #80deea;
 }
 
-/* Temperature - Maroon */
+#memory.warning {
+  color: #ffcc80;
+}
+
+#memory.critical {
+  background: #bf360c;
+  color: #ffccbc;
+}
+
+/* Temperature */
 #temperature {
-  color: #eba0ac;
+  color: #84ffff;
 }
-#temperature:hover {
-  background: rgba(235, 160, 172, 0.15);
+
+#temperature.warning {
+  color: #ffcc80;
 }
+
 #temperature.critical {
-  color: #1e1e2e;
-  background: linear-gradient(135deg, #f38ba8 0%, #eba0ac 100%);
-  animation: critical-blink 0.6s ease-in-out infinite alternate;
+  background: #bf360c;
+  color: #ffccbc;
 }
 
-/* Battery - Sky */
+/* Battery */
 #battery {
-  color: #89dceb;
+  color: #a7ffeb;
 }
-#battery:hover {
-  background: rgba(137, 220, 235, 0.15);
+
+#battery.charging,
+#battery.plugged {
+  color: #64ffda;
 }
-#battery.charging, #battery.plugged {
-  color: #a6e3a1;
-}
+
 #battery.warning:not(.charging) {
-  color: #f9e2af;
+  color: #ffcc80;
 }
+
 #battery.critical:not(.charging) {
-  color: #1e1e2e;
-  background: linear-gradient(135deg, #f38ba8 0%, #eba0ac 100%);
-  animation: critical-blink 0.6s ease-in-out infinite alternate;
+  background: #bf360c;
+  color: #ffccbc;
+  animation: critical-pulse 1s ease-in-out infinite alternate;
 }
 
-/* Network - Blue */
+/* Network */
 #network {
-  color: #89b4fa;
+  color: #80deea;
 }
-#network:hover {
-  background: rgba(137, 180, 250, 0.15);
-}
+
 #network.disconnected {
-  color: #6c7086;
+  color: #546e7a;
 }
 
-/* PulseAudio - Mauve */
+/* PulseAudio */
 #pulseaudio {
-  color: #cba6f7;
-}
-#pulseaudio:hover {
-  background: rgba(203, 166, 247, 0.15);
-}
-#pulseaudio.muted {
-  color: #6c7086;
+  color: #4dd0e1;
 }
 
-/* Clock - Lavender - Featured */
-#clock {
-  color: #b4befe;
-  font-weight: 600;
+#pulseaudio.muted {
+  color: #546e7a;
 }
-#clock:hover {
-  background: rgba(180, 190, 254, 0.15);
+
+/* Clock - Primary */
+#clock {
+  color: #4dd0e1;
+  font-weight: 500;
 }
 
 /* Tray */
 #tray {
-  color: #9399b2;
+  color: #b2dfdb;
 }
+
 #tray > .passive {
   -gtk-icon-effect: dim;
 }
+
 #tray > .needs-attention {
   -gtk-icon-effect: highlight;
-  background: rgba(243, 139, 168, 0.3);
-  border-radius: 6px;
+  background: rgba(100, 255, 218, 0.2);
+  border-radius: 5px;
 }
 
 /* Idle Inhibitor */
 #idle_inhibitor {
-  color: #6c7086;
+  color: #546e7a;
 }
+
 #idle_inhibitor.activated {
-  color: #a6e3a1;
+  color: #64ffda;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   Separators
-   ───────────────────────────────────────────────────────────────── */
-#custom-ip,
-#cpu,
-#memory,
-#temperature,
-#battery,
-#network,
-#pulseaudio {
-  border-right: 1px solid rgba(108, 112, 134, 0.2);
-  border-radius: 0;
-  padding: 2px 8px;
-}
-
-#cpu {
-  border-radius: 8px 0 0 8px;
-  padding-left: 10px;
-}
-
+/* Custom IP */
 #custom-ip {
-  color: #94e2d5;
-}
-
-#custom-ip:hover {
-  background: rgba(148, 226, 213, 0.15);
-}
-
-#pulseaudio {
-  border-right: none;
-}
-
-#clock {
-  border-radius: 0;
-  border-left: 1px solid rgba(108, 112, 134, 0.2);
-  padding: 2px 10px;
-}
-
-#tray {
-  border-radius: 0;
-  border-left: 1px solid rgba(108, 112, 134, 0.2);
-}
-
-#idle_inhibitor {
-  border-radius: 0 8px 8px 0;
-  padding-right: 10px;
-  border-left: 1px solid rgba(108, 112, 134, 0.2);
+  color: #80cbc4;
 }
 
 /* ─────────────────────────────────────────────────────────────────
    Animations
    ───────────────────────────────────────────────────────────────── */
-@keyframes critical-blink {
+@keyframes critical-pulse {
   from {
     opacity: 1;
   }
   to {
     opacity: 0.7;
-  }
-}
-
-@keyframes urgent-pulse {
-  from {
-    box-shadow: 0 1px 6px rgba(243, 139, 168, 0.4);
-  }
-  to {
-    box-shadow: 0 1px 12px rgba(243, 139, 168, 0.7);
   }
 }

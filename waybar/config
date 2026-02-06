@@ -4,9 +4,9 @@
   "position": "top",
   "spacing": 0,
   "modules-left": [
-    "hyprland/workspaces"
+    "hyprland/workspaces",
+    "hyprland/window"
   ],
-  "modules-center": ["hyprland/window"],
   "modules-right": [
     "cpu",
     "memory",
@@ -43,14 +43,23 @@
     "tooltip": false
   },
   "cpu": {
+    "states": {
+      "warning": 70,
+      "critical": 90
+    },
     "format": "󰻠 {usage}%",
     "tooltip": false
   },
   "memory": {
+    "states": {
+      "warning": 70,
+      "critical": 90
+    },
     "format": "󰍛 {}%"
   },
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",
+    "warning-threshold": 65,
     "critical-threshold": 80,
     "format": "{icon} {temperatureC}°C",
     "format-icons": ["󱃃", "󰔏", "󱃂"]
@@ -64,8 +73,7 @@
     "format": "{icon} {capacity}%",
     "format-charging": "󰂄 {capacity}%",
     "format-plugged": "󰚥 {capacity}%",
-    "format-alt": "{icon}",
-    "format-time": "{H}:{M}",
+    "format-alt": "{icon} {time}",
     "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
   },
   "network": {
@@ -102,7 +110,7 @@
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
   },
   "tray": {
-    "spacing": 8
+    "spacing": 0
   },
   "idle_inhibitor": {
     "format": "{icon}",
