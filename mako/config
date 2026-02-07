@@ -1,29 +1,107 @@
-max-history=5
+# Material You - Rich Notification Style
+
+max-history=10
 sort=-time
-on-button-middle=exec makoctl menu -n "$id" wofi -d -p 'Select action: '
-font=sans-serif
+
+# Typography
+font=Google Sans, Roboto, Noto Sans CJK JP, sans-serif 12
+
+# Layout
 layer=overlay
-width=600
-height=200
-margin=40
-padding=20,20,20,30
+anchor=top-right
+width=400
+height=180
+outer-margin=8
+margin=4
+padding=16,20
 border-size=2
-icon-path=/usr/share/icons/Dracula
-background-color=#3e4552dd
-text-color=#eeeeee
-border-color=#bacef5
-border-radius=10
-default-timeout=10000
+border-radius=12
+icons=1
+max-icon-size=64
+icon-location=left
+icon-border-radius=8
+max-visible=5
+
+# Colors (Material You / Waybar)
+background-color=#1a2327f0
+text-color=#e0f2f1
+border-color=#4dd0e1
+progress-color=over #4dd0e188
+
+# Format
+format=<b>%s</b>\n<span size="small" alpha="70%%">%b</span>
+text-alignment=left
+markup=1
+
+# Behavior
+default-timeout=8000
+ignore-timeout=0
+group-by=app-name
+history=1
+
+# Actions
+on-button-left=invoke-default-action
+on-button-middle=exec makoctl menu -n "$id" wofi -d -p 'Select action: '
+on-button-right=dismiss
+
+# ─────────────────────────────────────────
+# Urgency Levels
+# ─────────────────────────────────────────
 
 [urgency=low]
-border-color=#d2ced9
+border-color=#546e7a
+text-color=#b2dfdb
+default-timeout=5000
+format=<span size="small">%s</span>\n<span size="x-small" alpha="60%%">%b</span>
 
 [urgency=normal]
-border-color=#abbf86
+border-color=#4dd0e1
 
 [urgency=critical]
-border-color=#d9989c
-on-notify=exec mpv --keep-open=no /usr/share/sounds/freedesktop/stereo/message-new-instant.oga
+border-color=#ef5350
+background-color=#2a1a1af0
+text-color=#ffcdd2
+default-timeout=0
+on-notify=exec mpv --no-terminal --keep-open=no /usr/share/sounds/freedesktop/stereo/message-new-instant.oga
+
+# ─────────────────────────────────────────
+# Grouped Notifications
+# ─────────────────────────────────────────
+
+[grouped]
+format=<b>%s</b> <span size="small" alpha="50%%">+%g</span>\n<span size="small" alpha="70%%">%b</span>
+
+# ─────────────────────────────────────────
+# App-specific Styles
+# ─────────────────────────────────────────
+
+[app-name="Spotify"]
+border-color=#1db954
+background-color=#1a231df0
+
+[app-name="Discord"]
+border-color=#5865f2
+background-color=#1a1a27f0
+
+[app-name="Firefox"]
+border-color=#ff7139
+
+[app-name="Slack"]
+border-color=#4a154b
+background-color=#231a23f0
+
+[app-name="Thunderbird"]
+border-color=#0a84ff
+
+[app-name="KDE Connect"]
+border-color=#1d99f3
+
+# ─────────────────────────────────────────
+# Special Modes
+# ─────────────────────────────────────────
+
+[mode=do-not-disturb]
+invisible=1
 
 [mode=silent]
 invisible=1
