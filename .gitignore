@@ -47,7 +47,7 @@
 /irb/*
 !/irb/irbrc
 
-!/mako
+!/swaync
 
 !/nvim
 

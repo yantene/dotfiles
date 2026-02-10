@@ -1,0 +1,295 @@
+/* ═══════════════════════════════════════════════════════════════
+   SwayNC Theme - Colors matched to Waybar theme
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --notification-icon-size: 64px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Notification Popup
+   ───────────────────────────────────────────────────────────────── */
+
+.notification-row {
+  outline: none;
+  animation: fade-in 250ms ease-out;
+}
+
+.notification-row:focus .notification,
+.notification-row:hover .notification {
+  background: #1e2a2ef0;
+}
+
+.notification {
+  border-radius: 12px;
+  border: 2px solid #4dd0e1;
+  margin: 4px 8px;
+  padding: 0;
+  background: #1a2327f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.notification-content {
+  padding: 12px 16px;
+}
+
+.notification-default-action,
+.notification-action {
+  border: none;
+  background: transparent;
+  color: #e0f2f1;
+  padding: 0;
+  margin: 0;
+  border-radius: 12px;
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+  background: rgba(77, 208, 225, 0.12);
+}
+
+/* Close button */
+.close-button {
+  background: #37474f;
+  color: #b2dfdb;
+  border: none;
+  border-radius: 50%;
+  min-width: 24px;
+  min-height: 24px;
+  margin: 4px;
+  padding: 0;
+}
+
+.close-button:hover {
+  background: #546e7a;
+  color: #e0f2f1;
+}
+
+/* Typography */
+.summary {
+  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e0f2f1;
+}
+
+.body {
+  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #b2dfdb;
+}
+
+.time {
+  font-size: 11px;
+  color: #80cbc4;
+  margin-right: 8px;
+}
+
+.app-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: #80cbc4;
+}
+
+/* Image */
+.image {
+  margin: 4px 8px 4px 4px;
+  border-radius: 8px;
+}
+
+/* Inline replies */
+.inline-reply {
+  border-radius: 8px;
+  border: 1px solid #37474f;
+  background: #263238;
+  color: #e0f2f1;
+  margin: 4px 8px 8px;
+  padding: 6px 10px;
+}
+
+.inline-reply:focus {
+  border-color: #4dd0e1;
+}
+
+/* Action buttons */
+.notification-action {
+  border-top: 1px solid #37474f;
+  color: #4dd0e1;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.notification-action:first-child {
+  border-radius: 0 0 0 12px;
+}
+
+.notification-action:last-child {
+  border-radius: 0 0 12px 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Urgency Levels
+   ───────────────────────────────────────────────────────────────── */
+
+.low {
+  border-color: #546e7a;
+}
+
+.low .summary,
+.low .body {
+  color: #b2dfdb;
+}
+
+.normal {
+  border-color: #4dd0e1;
+}
+
+.critical {
+  border-color: #ef5350;
+  background: #2a1a1af0;
+}
+
+.critical .summary,
+.critical .body {
+  color: #ffcdd2;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   App-specific Border Colors
+   ───────────────────────────────────────────────────────────────── */
+
+.notification.Spotify {
+  border-color: #1db954;
+  background: #1a231df0;
+}
+
+.notification.Discord {
+  border-color: #5865f2;
+  background: #1a1a27f0;
+}
+
+.notification.Firefox {
+  border-color: #ff7139;
+}
+
+.notification.Slack {
+  border-color: #4a154b;
+  background: #231a23f0;
+}
+
+.notification.Thunderbird {
+  border-color: #0a84ff;
+}
+
+.notification.KDE.Connect {
+  border-color: #1d99f3;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Control Center (Notification Panel)
+   ───────────────────────────────────────────────────────────────── */
+
+.control-center {
+  background: #1a2327f0;
+  border-radius: 12px 0 0 12px;
+  border: 1px solid #37474f;
+  border-right: none;
+  margin: 8px 0 8px 8px;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Title widget */
+.widget-title {
+  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", sans-serif;
+  color: #e0f2f1;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 4px 8px;
+}
+
+.widget-title > button {
+  background: #37474f;
+  color: #b2dfdb;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.widget-title > button:hover {
+  background: #546e7a;
+  color: #e0f2f1;
+}
+
+/* DND widget */
+.widget-dnd {
+  margin: 4px 8px;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #b2dfdb;
+}
+
+.widget-dnd > switch {
+  background: #37474f;
+  border: none;
+  border-radius: 12px;
+}
+
+.widget-dnd > switch:checked {
+  background: #004d40;
+}
+
+.widget-dnd > switch slider {
+  background: #b2dfdb;
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+.widget-dnd > switch:checked slider {
+  background: #4dd0e1;
+}
+
+/* Notification group */
+.notification-group {
+  margin: 2px 0;
+}
+
+.notification-group-headers {
+  font-size: 12px;
+  font-weight: 500;
+  color: #80cbc4;
+  padding: 4px 8px;
+}
+
+.notification-group-icon {
+  margin-right: 8px;
+}
+
+.notification-group-collapse-button {
+  background: transparent;
+  color: #80cbc4;
+  border: none;
+  padding: 4px;
+}
+
+.notification-group-collapse-button:hover {
+  color: #e0f2f1;
+}
+
+/* Notification items in control center */
+.control-center .notification-row .notification-background .notification {
+  background: #1e2a2e;
+}
+
+/* Blank window behind control center */
+.blank-window {
+  background: transparent;
+}

@@ -81,7 +81,8 @@ tooltip label {
 #clock,
 #tray,
 #idle_inhibitor,
-#custom-ip {
+#custom-ip,
+#custom-notification {
   padding: 2px 10px;
   margin: 0;
   border-radius: 5px;
@@ -99,6 +100,7 @@ tooltip label {
 #pulseaudio:hover,
 #clock:hover,
 #custom-ip:hover,
+#custom-notification:hover,
 #idle_inhibitor:hover {
   background: rgba(77, 208, 225, 0.12);
 }
@@ -258,6 +260,11 @@ tooltip label {
 
 #idle_inhibitor.activated {
   color: #64ffda;
+}
+
+/* Notification */
+#custom-notification {
+  color: #4dd0e1;
 }
 
 /* Custom IP */
