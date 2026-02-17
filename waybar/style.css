@@ -52,6 +52,27 @@ tooltip label {
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   Context Menu (System Tray)
+   ───────────────────────────────────────────────────────────────── */
+menu {
+  background: #1a2327;
+  color: #e0f2f1;
+  border: 1px solid #37474f;
+  border-radius: 5px;
+  padding: 4px 0;
+}
+
+menuitem {
+  background: transparent;
+  color: #e0f2f1;
+  padding: 4px 12px;
+}
+
+menuitem:hover {
+  background: rgba(77, 208, 225, 0.12);
+}
+
+/* ─────────────────────────────────────────────────────────────────
    Surface Containers
    ───────────────────────────────────────────────────────────────── */
 .modules-left,
@@ -265,6 +286,13 @@ tooltip label {
 /* Notification */
 #custom-notification {
   color: #4dd0e1;
+}
+
+/* Arch Logo */
+#custom-logo {
+  color: #1793d1;
+  font-size: 14px;
+  padding: 2px 12px 2px 8px;
 }
 
 /* Custom IP */

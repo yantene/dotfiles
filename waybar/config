@@ -4,6 +4,7 @@
   "position": "top",
   "spacing": 0,
   "modules-left": [
+    "custom/logo",
     "hyprland/workspaces",
     "hyprland/window"
   ],
@@ -146,6 +147,13 @@
     "exec": "~/.config/waybar/scripts/ip-info.sh",
     "format": "󰇧 {}",
     "format-alt": "󰩟 {alt}",
+    "tooltip": true
+  },
+  "custom/logo": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "~/.config/waybar/scripts/os-info.sh",
+    "interval": 3600,
     "tooltip": true
   }
 }
