@@ -1,49 +1,68 @@
 <%
-def hsl2rgb(h, s, l)
-  min, max = [-1, 1].map { |pol|
-    l + pol * (50 - (l - 50).abs) * s / 100.0
+def oklch2rgb(l, c, h)
+  # OKLCH -> OKLAB
+  h_rad = h * Math::PI / 180
+  a = c * Math.cos(h_rad)
+  b = c * Math.sin(h_rad)
+
+  # OKLAB -> LMS (cube root space)
+  l_ = l + 0.3963377774 * a + 0.2158037573 * b
+  m_ = l - 0.1055613458 * a - 0.0638541728 * b
+  s_ = l - 0.0894841775 * a - 1.2914855480 * b
+
+  # LMS cube root -> LMS
+  lms_l = l_ ** 3
+  lms_m = m_ ** 3
+  lms_s = s_ ** 3
+
+  # LMS -> Linear sRGB
+  r_lin = +4.0767416621 * lms_l - 3.3077115913 * lms_m + 0.2309699292 * lms_s
+  g_lin = -1.2684380046 * lms_l + 2.6097574011 * lms_m - 0.3413193965 * lms_s
+  b_lin = -0.0041960863 * lms_l - 0.7034186147 * lms_m + 1.7076147010 * lms_s
+
+  # Linear sRGB -> sRGB (gamma correction)
+  to_srgb = ->(c) {
+    c <= 0.0031308 ? 12.92 * c : 1.055 * (c ** (1.0/2.4)) - 0.055
   }
-  mid = (60 - (h % 120.0 - 60).abs).fdiv(60) * (max - min) + min
 
   format(
     '0x%02x%02x%02x',
-    *[
-      [max, mid, min], [mid, max, min], [min, max, mid],
-      [min, mid, max], [mid, min, max], [max, min, mid],
-    ][h % 360 / 60].map { |c| (c * 255 / 100).round },
+    *[r_lin, g_lin, b_lin].map { |c| (to_srgb.(c).clamp(0, 1) * 255).round }
   )
 end
 
-rot = -15
-nsat, nlit =  65, 55
-bsat, blit =  75, 65
+# OKLCH: L=明度(0-1), C=彩度(0-0.4程度), H=色相(度)
+# 色相: 赤≈30, 黄≈90, 緑≈145, シアン≈195, 青≈265, マゼンタ≈330
+rot = 0
+hues = { red: 30, yellow: 90, green: 145, cyan: 195, blue: 265, magenta: 330 }
+hues.transform_values! { |h| h + rot }
+nl, nc = 0.75, 0.28  # normal
+bl, bc = 0.85, 0.32  # bright
 %>
-
-live_config_reload = true
 
 [colors.primary]
 background = "0x242424"
 foreground = "0xeaeaea"
 
 [colors.normal]
-black   = "<%= hsl2rgb(0, 0, 0) %>"
-white   = "<%= hsl2rgb(0, 0, 85) %>"
-red     = "<%= hsl2rgb(60 * 0 + rot, nsat, nlit) %>"
-yellow  = "<%= hsl2rgb(60 * 1 + rot, nsat, nlit) %>"
-green   = "<%= hsl2rgb(60 * 2 + rot, nsat, nlit) %>"
-cyan    = "<%= hsl2rgb(60 * 3 + rot, nsat, nlit) %>"
-blue    = "<%= hsl2rgb(60 * 4 + rot, nsat, nlit) %>"
-magenta = "<%= hsl2rgb(60 * 5 + rot, nsat, nlit) %>"
+black   = "<%= oklch2rgb(0, 0, 0) %>"
+white   = "<%= oklch2rgb(0.85, 0, 0) %>"
+red     = "<%= oklch2rgb(nl, nc, hues[:red]) %>"
+yellow  = "<%= oklch2rgb(nl, nc, hues[:yellow]) %>"
+green   = "<%= oklch2rgb(nl, nc, hues[:green]) %>"
+cyan    = "<%= oklch2rgb(nl, nc, hues[:cyan]) %>"
+blue    = "<%= oklch2rgb(nl, nc, hues[:blue]) %>"
+magenta = "<%= oklch2rgb(nl, nc, hues[:magenta]) %>"
 
 [colors.bright]
-black   = "<%= hsl2rgb(0, 0, 35) %>"
-white   = "<%= hsl2rgb(0, 0, 90) %>"
-red     = "<%= hsl2rgb(60 * 0 + rot, bsat, blit) %>"
-yellow  = "<%= hsl2rgb(60 * 1 + rot, bsat, blit) %>"
-green   = "<%= hsl2rgb(60 * 2 + rot, bsat, blit) %>"
-cyan    = "<%= hsl2rgb(60 * 3 + rot, bsat, blit) %>"
-blue    = "<%= hsl2rgb(60 * 4 + rot, bsat, blit) %>"
-magenta = "<%= hsl2rgb(60 * 5 + rot, bsat, blit) %>"
+black   = "<%= oklch2rgb(0.35, 0, 0) %>"
+white   = "<%= oklch2rgb(0.90, 0, 0) %>"
+red     = "<%= oklch2rgb(bl, bc, hues[:red]) %>"
+yellow  = "<%= oklch2rgb(bl, bc, hues[:yellow]) %>"
+green   = "<%= oklch2rgb(bl, bc, hues[:green]) %>"
+cyan    = "<%= oklch2rgb(bl, bc, hues[:cyan]) %>"
+blue    = "<%= oklch2rgb(bl, bc, hues[:blue]) %>"
+magenta = "<%= oklch2rgb(bl, bc, hues[:magenta]) %>"
 
 [env]
 TERM = "xterm-256color"
@@ -124,3 +143,11 @@ lines = 0
 [window.padding]
 x = 0
 y = 0
+
+[general]
+live_config_reload = true
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001b\r"

@@ -1,26 +1,28 @@
+
+
 [colors.primary]
 background = "0x242424"
 foreground = "0xeaeaea"
 
 [colors.normal]
 black   = "0x000000"
-white   = "0xd9d9d9"
-red     = "0xd74267"
-yellow  = "0xd7b242"
-green   = "0x67d742"
-cyan    = "0x42d7b2"
-blue    = "0x4267d7"
-magenta = "0xb242d7"
+white   = "0xcecece"
+red     = "0xff3d26"
+yellow  = "0xf29b00"
+green   = "0x00d700"
+cyan    = "0x00dce4"
+blue    = "0x549aff"
+magenta = "0xff52ff"
 
 [colors.bright]
-black   = "0x595959"
-white   = "0xe6e6e6"
-red     = "0xe96384"
-yellow  = "0xe9c763"
-green   = "0x84e963"
-cyan    = "0x63e9c7"
-blue    = "0x6384e9"
-magenta = "0xc763e9"
+black   = "0x3a3a3a"
+white   = "0xdedede"
+red     = "0xff462c"
+yellow  = "0xffb800"
+green   = "0x00fe00"
+cyan    = "0x00ffff"
+blue    = "0x63b6ff"
+magenta = "0xff60ff"
 
 [env]
 TERM = "xterm-256color"
@@ -103,5 +105,9 @@ x = 0
 y = 0
 
 [general]
-
 live_config_reload = true
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001b\r"
