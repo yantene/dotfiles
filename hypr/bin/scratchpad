@@ -1,0 +1,11 @@
+#!/bin/bash
+# Scratchpad terminal toggle script
+
+CLASS="Alacritty-scratchpad"
+SESSION="spad"
+
+if hyprctl clients -j | jq -e ".[] | select(.class == \"$CLASS\")" > /dev/null 2>&1; then
+    hyprctl dispatch closewindow "class:$CLASS"
+else
+    alacritty --class "$CLASS" -e tmux new-session -A -s "$SESSION" \; set status-bg '#00acc1' &
+fi
