@@ -50,14 +50,16 @@
       "critical": 90
     },
     "format": "󰻠 {usage}%",
-    "tooltip": false
+    "tooltip": false,
+    "on-click": "$XDG_CONFIG_HOME/hypr/bin/scratchpad-htop PERCENT_CPU"
   },
   "memory": {
     "states": {
       "warning": 70,
       "critical": 90
     },
-    "format": "󰍛 {}%"
+    "format": "󰍛 {}%",
+    "on-click": "$XDG_CONFIG_HOME/hypr/bin/scratchpad-htop PERCENT_MEM"
   },
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon6/temp1_input",

@@ -1,0 +1,20 @@
+#!/bin/bash
+# Open htop in scratchpad tmux session
+
+SESSION="spad"
+CLASS="Alacritty-scratchpad"
+SORT_KEY="${1:-PERCENT_CPU}"
+
+# Create session if it doesn't exist
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+    tmux new-session -d -s "$SESSION"
+    tmux set -t "$SESSION" status-bg '#00acc1'
+fi
+
+# Create new window with htop
+tmux new-window -t "$SESSION" -n htop "htop --sort-key=$SORT_KEY"
+
+# Show scratchpad only if not already visible
+if ! hyprctl clients -j | jq -e ".[] | select(.class == \"$CLASS\")" > /dev/null 2>&1; then
+    $XDG_CONFIG_HOME/hypr/bin/scratchpad
+fi
