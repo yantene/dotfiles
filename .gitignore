@@ -38,6 +38,7 @@
 !/hypr/hyprlock.conf
 !/hypr/hypridle.conf
 !/hypr/conf.d
+/hypr/conf.d/monitors.conf
 
 !/ideavim
 /ideavim/*
