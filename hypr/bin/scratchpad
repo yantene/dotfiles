@@ -1,11 +1,50 @@
 #!/bin/bash
 # Scratchpad terminal toggle script
 
-CLASS="Alacritty-scratchpad"
-SESSION="spad"
+CLASS="com.ghostty.scratchpad"
+
+position_scratchpad() {
+    # 現在のモニタ情報を取得して位置を設定
+    MONITOR=$(hyprctl monitors -j | jq '.[] | select(.focused == true)')
+    MON_X=$(echo "$MONITOR" | jq -r '.x')
+    MON_Y=$(echo "$MONITOR" | jq -r '.y')
+    MON_W=$(echo "$MONITOR" | jq -r '.width')
+    MON_H=$(echo "$MONITOR" | jq -r '.height')
+    RESERVED_TOP=$(echo "$MONITOR" | jq -r '.reserved[1]')
+
+    # 90% x 20%、左右中央・上部 (waybar の下)
+    WIN_W=$((MON_W * 90 / 100))
+    WIN_H=$((MON_H * 20 / 100))
+    WIN_X=$((MON_X + MON_W * 5 / 100))
+    WIN_Y=$((MON_Y + RESERVED_TOP))
+
+    hyprctl dispatch resizewindowpixel "exact $WIN_W $WIN_H,class:$CLASS"
+    hyprctl dispatch movewindowpixel "exact $WIN_X $WIN_Y,class:$CLASS"
+}
 
 if hyprctl clients -j | jq -e ".[] | select(.class == \"$CLASS\")" > /dev/null 2>&1; then
-    hyprctl dispatch closewindow "class:$CLASS"
+    # ウィンドウの現在のワークスペースを取得
+    WORKSPACE=$(hyprctl clients -j | jq -r ".[] | select(.class == \"$CLASS\") | .workspace.name")
+
+    if [[ "$WORKSPACE" == special:* ]]; then
+        # 隠れている場合、現在のワークスペースに移動して表示
+        CURRENT=$(hyprctl activeworkspace -j | jq -r '.name')
+        hyprctl dispatch movetoworkspacesilent "$CURRENT,class:$CLASS"
+        hyprctl dispatch focuswindow "class:$CLASS"
+        position_scratchpad
+    else
+        # 表示されている場合、special workspace に隠す
+        hyprctl dispatch movetoworkspacesilent "special:scratchpad,class:$CLASS"
+    fi
 else
-    alacritty --class "$CLASS" -e tmux new-session -A -s "$SESSION" \; set status-bg '#00acc1' &
+    # 新規作成
+    ghostty --class="$CLASS" &
+    # ウィンドウが作成されるまで待機
+    for _ in {1..20}; do
+        sleep 0.05
+        if hyprctl clients -j | jq -e ".[] | select(.class == \"$CLASS\")" > /dev/null 2>&1; then
+            position_scratchpad
+            break
+        fi
+    done
 fi

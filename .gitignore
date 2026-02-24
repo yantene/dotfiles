@@ -78,6 +78,10 @@
 !/alacritty/alacritty.toml
 !/alacritty/alacritty.toml.erb
 
+!/ghostty
+/ghostty/*
+!/ghostty/config
+
 !/tmux
 /tmux/*
 !/tmux/tmux.conf
