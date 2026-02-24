@@ -82,6 +82,12 @@
 /ghostty/*
 !/ghostty/config
 
+!/Code
+/Code/*
+!/Code/User
+/Code/User/*
+!/Code/User/keybindings.json
+
 !/tmux
 /tmux/*
 !/tmux/tmux.conf
