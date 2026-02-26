@@ -23,8 +23,14 @@
   awidf = diff --cached --word-diff --ignore-space-change
   rewind = reset --soft HEAD~
 
+[push]
+  default = current
+
+[fetch]
+  prune = true
+
 [pull]
-  rebase = false
+  ff = only
 
 [gpg]
   program = gpg2
