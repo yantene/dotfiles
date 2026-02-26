@@ -22,6 +22,7 @@
 !/fish/completions
 !/fish/conf.d
 !/fish/functions
+/fish/functions/work.fish
 
 !/fontconfig
 /fontconfig/*
