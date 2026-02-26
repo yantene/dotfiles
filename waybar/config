@@ -5,8 +5,8 @@
   "spacing": 0,
   "modules-left": [
     "custom/logo",
-    "hyprland/workspaces",
-    "hyprland/window"
+    "hyprland/workspaces"
+    // "hyprland/window" // モニタ切替時にクラッシュするため無効化 (GitHub #3365)
   ],
   "modules-right": [
     "cpu",
