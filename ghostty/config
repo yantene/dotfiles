@@ -11,6 +11,9 @@ font-size = 10
 # Scrollback
 scrollback-limit = 100000
 
+# Terminal Type (リモートサーバー互換性のため)
+term = xterm-256color
+
 # Appearance
 background-opacity = 0.9
 window-decoration = false
