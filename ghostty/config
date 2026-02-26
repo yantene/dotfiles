@@ -1,5 +1,9 @@
 # Ghostty Configuration
 
+# Working Directory
+working-directory = home
+window-inherit-working-directory = false
+
 # Font
 font-family = monospace
 font-size = 10
