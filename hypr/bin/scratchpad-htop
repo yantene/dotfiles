@@ -16,5 +16,5 @@ tmux new-window -t "$SESSION" -n htop "htop --sort-key=$SORT_KEY"
 
 # Show scratchpad only if not already visible
 if ! hyprctl clients -j | jq -e ".[] | select(.class == \"$CLASS\")" > /dev/null 2>&1; then
-    $XDG_CONFIG_HOME/hypr/bin/scratchpad
+    hyprctl eval '_G.toggle_scratchpad()'
 fi

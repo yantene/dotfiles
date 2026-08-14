@@ -35,11 +35,11 @@
 !/hypr
 /hypr/*
 !/hypr/bin
-!/hypr/hyprland.conf
+!/hypr/hyprland.lua
 !/hypr/hyprlock.conf
 !/hypr/hypridle.conf
 !/hypr/conf.d
-/hypr/conf.d/monitors.conf
+/hypr/conf.d/monitors.lua
 
 !/ideavim
 /ideavim/*
