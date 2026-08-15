@@ -5,7 +5,7 @@
   "spacing": 0,
   "modules-left": [
     "custom/logo",
-    "hyprland/workspaces"
+    "ext/workspaces"
     // "hyprland/window" // モニタ切替時にクラッシュするため無効化 (GitHub #3365)
   ],
   "modules-right": [
@@ -21,8 +21,18 @@
     "tray",
     "idle_inhibitor"
   ],
-  "hyprland/workspaces": {
+  // Hyprland 0.54 以降の Lua 設定では、waybar 0.15.0 の hyprland/workspaces は
+  // クリックが効かない。モジュールが IPC へ旧形式の `dispatch workspace N` を
+  // 直接発行しており、Lua 側では構文エラーになるため (設定では回避できない)。
+  // ext-workspace-v1 プロトコル経由のこちらは dispatch を経由しないため影響を受けない。
+  //
+  // 上流では PR #5013 (2026-05-04 merge) で修正済み。waybar が 0.15.0 より先の
+  // バージョンに上がったら hyprland/workspaces へ戻してよい。
+  // See: https://github.com/Alexays/Waybar/issues/5008
+  "ext/workspaces": {
     "format": "{icon}",
+    // 明示しないとクリックしても何も起きない (既定値は空でノーオペレーション)
+    "on-click": "activate",
     "format-icons": {
       "1": "1",
       "2": "2",
@@ -36,8 +46,8 @@
       "10": "0",
       "default": "+"
     },
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1"
+    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'"
   },
   "hyprland/window": {
     "format": "{}",
