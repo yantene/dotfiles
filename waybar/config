@@ -79,6 +79,7 @@
     "format-icons": ["󱃃", "󰔏", "󱃂"]
   },
   "battery": {
+    "bat": "BAT0",
     "states": {
       "good": 70,
       "warning": 30,
