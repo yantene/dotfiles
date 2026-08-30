@@ -19,7 +19,7 @@
   --noti-bg-alpha: 0.97;
   --noti-bg-darker: rgb(4, 7, 12);
   --noti-bg-hover: rgb(6, 50, 59);
-  --noti-bg-focus: rgba(0, 240, 255, 0.1);
+  --noti-bg-focus: transparent;
   --noti-close-bg: rgba(255, 42, 109, 0.18);
   --noti-close-bg-hover: rgb(255, 42, 109);
   --text-color: #7de3ef;
@@ -89,14 +89,29 @@
   letter-spacing: 1px;
 }
 
-/* ホバー中の通知は枠と発光を強める */
+/*
+ * ホバー中の通知
+ *
+ * 既定は内側の .notification-default-action に背景を敷くが、その要素の角丸は
+ * 親の枠と噛み合わず、塗りが矩形のままはみ出す。背景は角丸と枠を持つ
+ * .notification 側に移し、内側は透明にしておく。
+ */
+.notification-row .notification-background .notification .notification-default-action:hover,
+.control-center .control-center-list .notification .notification-default-action:hover {
+  background: transparent;
+}
+
 .notification-row:hover .notification-background .notification,
+.notification-row:focus .notification-background .notification,
 .control-center .control-center-list .notification:hover {
+  background-color: rgb(6, 50, 59);
   border: 1px solid rgba(0, 240, 255, 0.75);
   box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2), 0 0 26px rgba(0, 240, 255, 0.3);
 }
 
 .notification-row:hover .notification-background .notification .notification-default-action
+  .notification-content .text-box .summary,
+.notification-row:focus .notification-background .notification .notification-default-action
   .notification-content .text-box .summary {
   color: #ffffff;
   text-shadow: 0 0 10px rgba(0, 240, 255, 0.9);
