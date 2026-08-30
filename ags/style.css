@@ -1,0 +1,734 @@
+/* ═══════════════════════════════════════════════════════════════
+   CYBERPUNK — ネオン / 走査線 / グロー
+
+   余白は 4 の倍数、角丸は 4 段階 (4 / 7 / 10 / 14) に揃えている
+   ═══════════════════════════════════════════════════════════════ */
+
+/* パレット (系統ごとに色を割り当てる)
+   背景     #05080f
+   シアン   #00f0ff   主系統: ロゴ / 島の枠 / 時計 / 電源
+   イエロー #f7f43a   CPU
+   グリーン #7cf6a0   メモリ
+   レッド   #ff5544   温度
+   マゼンタ #ff2a6d   音声 / 上り帯域
+   パープル #b47cf6   ネットワーク / IP
+   水色     #5fd8e8   通信 / 天気
+   ゴールド #ffb627   為替 / warning
+   ミュート #2f5563   無効・切断
+*/
+
+* {
+  font-family: "Hack Nerd Font", "Symbols Nerd Font", "Noto Sans CJK JP", monospace;
+  font-size: 12px;
+  font-weight: 500;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  letter-spacing: 0.4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   バー本体
+   ───────────────────────────────────────────────────────────────── */
+window.Bar {
+  background-color: #05080f;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 240, 255, 0.03) 0px,
+    rgba(0, 240, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  color: #7de3ef;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.35);
+  box-shadow: inset 0 -12px 20px -14px rgba(0, 240, 255, 0.55);
+}
+
+window.Bar > centerbox {
+  /* 高さは島の中身に任せる。min-height を置くと余りが上下に散る */
+  padding: 0 10px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   島
+   ───────────────────────────────────────────────────────────────── */
+.island {
+  /* 枠線をやめて背景の濃度差だけでグループを示す。
+     min-height は 1 行の島 (ワークスペース / トレイ) を 2 行の島に合わせるため */
+  min-height: 39px;
+  background-color: rgba(0, 240, 255, 0.06);
+  border: none;
+  border-radius: 8px;
+  padding: 1px 8px;
+  /* 上は画面端に詰めて、下だけ余白を持たせる */
+  margin: 0 0 3px 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   モジュール共通
+   ───────────────────────────────────────────────────────────────── */
+.cpu,
+.memory,
+.temperature,
+.battery,
+.network,
+.ip,
+.volume,
+.clock,
+.notification,
+.idle-inhibitor,
+.weather,
+.forex {
+  padding: 3px 10px;
+  border-radius: 7px;
+  color: #5fd8e8;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.35);
+  transition: all 0.18s ease;
+}
+
+.cpu:hover,
+.memory:hover,
+.temperature:hover,
+.battery:hover,
+.network:hover,
+.ip:hover,
+.volume:hover,
+.clock:hover,
+.notification:hover,
+.idle-inhibitor:hover,
+.weather:hover,
+.forex:hover {
+  background-color: rgba(0, 240, 255, 0.12);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.9);
+}
+
+.cpu {
+  color: #f7f43a;
+  text-shadow: 0 0 4px rgba(247, 244, 58, 0.4);
+}
+
+.memory {
+  color: #7cf6a0;
+  text-shadow: 0 0 4px rgba(124, 246, 160, 0.4);
+}
+
+.temperature {
+  color: #ff5544;
+  text-shadow: 0 0 4px rgba(255, 85, 68, 0.4);
+}
+
+.battery,
+.clock,
+.notification {
+  color: #00f0ff;
+}
+
+.volume {
+  color: #ff2a6d;
+  text-shadow: 0 0 4px rgba(255, 42, 109, 0.4);
+}
+
+.network,
+.weather {
+  color: #5fd8e8;
+}
+
+.ip-line {
+  color: #b47cf6;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 4px rgba(180, 124, 246, 0.3);
+}
+
+.ip-line.v6 {
+  color: #7a5bb8;
+}
+
+.ip {
+  color: #b47cf6;
+  text-shadow: 0 0 4px rgba(180, 124, 246, 0.35);
+}
+
+.market {
+  color: #ffb627;
+  text-shadow: 0 0 4px rgba(255, 182, 39, 0.35);
+}
+
+.clock {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* 状態 */
+.warning {
+  color: #ffb627;
+  text-shadow: 0 0 8px rgba(255, 182, 39, 0.8);
+}
+
+.critical {
+  color: #ff2a6d;
+  background-color: rgba(255, 42, 109, 0.16);
+  text-shadow: 0 0 12px rgba(255, 42, 109, 1);
+  animation: alert-pulse 1.1s ease-in-out infinite alternate;
+}
+
+.network.disconnected,
+.volume.muted,
+.idle-inhibitor {
+  color: #2f5563;
+  text-shadow: none;
+}
+
+.idle-inhibitor.activated {
+  color: #f7f43a;
+  text-shadow: 0 0 9px rgba(247, 244, 58, 0.85);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ロゴ
+   ───────────────────────────────────────────────────────────────── */
+.logo {
+  color: #00f0ff;
+  font-size: 16px;
+  padding: 0 10px 0 6px;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.95);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ワークスペース
+   ───────────────────────────────────────────────────────────────── */
+.workspaces .workspace {
+  padding: 3px 11px;
+  margin: 2px 1px;
+  color: #4a7683;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  transition: all 0.18s ease;
+}
+
+.workspaces .workspace:hover {
+  color: #7de3ef;
+  background-color: rgba(0, 240, 255, 0.1);
+}
+
+.workspaces .workspace.active {
+  color: #00f0ff;
+  background-color: rgba(0, 240, 255, 0.14);
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 1);
+  box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.22), 0 0 6px rgba(0, 240, 255, 0.3);
+}
+
+.workspaces .workspace.urgent {
+  color: #ff2a6d;
+  border: 1px solid rgba(255, 42, 109, 0.7);
+  text-shadow: 0 0 10px rgba(255, 42, 109, 1);
+  animation: alert-pulse 0.9s ease-in-out infinite alternate;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ネットワーク速度
+   ───────────────────────────────────────────────────────────────── */
+.netspeed {
+  padding: 3px 8px;
+}
+
+.net-down {
+  color: #00f0ff;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.45);
+}
+
+.net-up {
+  color: #ff2a6d;
+  text-shadow: 0 0 4px rgba(255, 42, 109, 0.45);
+}
+
+.sparkline {
+  margin: 0 3px 0 1px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   トレイ
+   ───────────────────────────────────────────────────────────────── */
+.tray .tray-item {
+  padding: 3px 6px;
+  border-radius: 7px;
+  transition: all 0.18s ease;
+}
+
+.tray .tray-item:hover {
+  background-color: rgba(0, 240, 255, 0.12);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ツールチップ
+   ───────────────────────────────────────────────────────────────── */
+tooltip {
+  background-color: #05080f;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.18);
+}
+
+tooltip label {
+  color: #7de3ef;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   コンテキストメニュー
+   実ノードは popover.menu > ... > modelbutton
+   ───────────────────────────────────────────────────────────────── */
+popover.background > contents,
+popover > contents {
+  background-color: #05080f;
+  color: #7de3ef;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 0 26px rgba(0, 240, 255, 0.2);
+}
+
+popover.menu.background > contents,
+popover.menu > contents {
+  padding: 6px;
+  min-width: 220px;
+}
+
+popover.menu modelbutton {
+  background-color: transparent;
+  color: #7de3ef;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 1px 0;
+  min-height: 30px;
+  border-left: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+popover.menu modelbutton:hover {
+  background-color: rgba(0, 240, 255, 0.13);
+  border-left: 2px solid #00f0ff;
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.9);
+}
+
+popover.menu modelbutton:active {
+  background-color: rgba(0, 240, 255, 0.24);
+}
+
+popover.menu modelbutton:disabled {
+  color: #2f5563;
+  text-shadow: none;
+}
+
+popover.menu modelbutton.title {
+  color: #00f0ff;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* インジケータの箱は印の無い項目にも存在する。幅を与えて左端を揃える */
+popover.menu modelbutton > box.horizontal {
+  min-width: 20px;
+}
+
+popover.menu modelbutton radio,
+popover.menu modelbutton check {
+  min-width: 14px;
+  min-height: 14px;
+}
+
+popover.menu modelbutton radio:checked,
+popover.menu modelbutton check:checked {
+  color: #00f0ff;
+}
+
+popover.menu modelbutton arrow {
+  min-width: 14px;
+  min-height: 14px;
+}
+
+popover.menu separator {
+  background-color: rgba(0, 240, 255, 0.22);
+  min-height: 1px;
+  margin: 6px 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   HUD ウィンドウ
+   layer surface 上の popover はフォーカス解決で落ちるため、
+   ポップオーバーではなく自前のサーフェスとして出す
+   ───────────────────────────────────────────────────────────────── */
+window.HudWindow {
+  background-color: transparent;
+}
+
+.hud-frame {
+  background-color: rgba(5, 8, 15, 0.97);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 240, 255, 0.035) 0px,
+    rgba(0, 240, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 0 44px rgba(0, 240, 255, 0.22), inset 0 0 32px rgba(0, 240, 255, 0.05);
+}
+
+.hud {
+  min-width: 268px;
+}
+
+.hud-title {
+  color: #00f0ff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.9);
+  padding-bottom: 2px;
+}
+
+.hud-section {
+  color: #5fd8e8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px rgba(0, 240, 255, 0.4);
+}
+
+.hud-value {
+  color: #f7f43a;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 5px rgba(247, 244, 58, 0.45);
+}
+
+.hud-key {
+  color: #5fd8e8;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+
+.hud-val {
+  color: #7de3ef;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.3);
+}
+
+.hud-val.used {
+  color: #7cf6a0;
+  text-shadow: 0 0 5px rgba(124, 246, 160, 0.45);
+}
+
+.hud-val.beat {
+  color: #ffb627;
+  text-shadow: 0 0 6px rgba(255, 182, 39, 0.5);
+}
+
+.hud-val.cached {
+  color: #b47cf6;
+}
+
+.hud-val.buffers {
+  color: #f7f43a;
+}
+
+.hud-val.local {
+  color: #00f0ff;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+}
+
+.hud-val.muted {
+  color: #2f5563;
+  text-shadow: none;
+}
+
+.hud-legend {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.hud-legend.used {
+  color: #7cf6a0;
+}
+
+.hud-legend.cached {
+  color: #b47cf6;
+}
+
+.hud-legend.buffers {
+  color: #f7f43a;
+}
+
+.hud-legend.free {
+  color: #00f0ff;
+}
+
+.hud-mono {
+  color: #5fd8e8;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.25);
+}
+
+.hud-bigclock {
+  color: #00f0ff;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+}
+
+.hud-bigclock.critical {
+  color: #ff2a6d;
+  background-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 42, 109, 0.9);
+}
+
+.hud-subclock {
+  color: #5fd8e8;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px rgba(0, 240, 255, 0.35);
+}
+
+.hud-calendar,
+.hud-calendar calendar {
+  background-color: rgba(0, 240, 255, 0.04);
+  color: #7de3ef;
+  border: 1px solid rgba(0, 240, 255, 0.18);
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.hud-calendar calendar > header {
+  color: #00f0ff;
+}
+
+.core-bars,
+.mem-breakdown {
+  margin: 2px 0;
+}
+
+/* 温度センサーのバー */
+.temp-bar trough {
+  background-color: rgba(0, 240, 255, 0.1);
+  border-radius: 4px;
+  min-height: 8px;
+}
+
+.temp-bar block.filled {
+  background-color: #ff5544;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(255, 85, 68, 0.5);
+}
+
+.temp-bar.warning block.filled {
+  background-color: #ffb627;
+  box-shadow: 0 0 6px rgba(255, 182, 39, 0.55);
+}
+
+.temp-bar.critical block.filled {
+  background-color: #ff2a6d;
+  box-shadow: 0 0 8px rgba(255, 42, 109, 0.75);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   アニメーション
+   ───────────────────────────────────────────────────────────────── */
+@keyframes alert-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   2 行表示のモジュール
+
+   縦位置を島またぎで揃えるため、次の 3 つを全モジュールで共通にする
+     - 行の高さ   .mod-row の min-height
+     - 縦の余白   行では 0 にして、島の padding だけで調整する
+     - アイコン幅 .mod-icon の min-width
+   ───────────────────────────────────────────────────────────────── */
+.mod-row {
+  min-height: 19px;
+  padding: 0 2px;
+}
+
+/* 3 段に積む行。13px x 3 = 39px。2 段 (19px x 2 = 38px) とは
+   .island の min-height で揃える */
+.mod-row-sm {
+  min-height: 13px;
+  padding: 0 2px;
+}
+
+.quote-name {
+  color: #5a8a96;
+  font-size: 9px;
+  letter-spacing: 1px;
+  min-width: 30px;
+}
+
+.quote-price {
+  color: #ffb627;
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  text-shadow: 0 0 4px rgba(255, 182, 39, 0.3);
+}
+
+.quote-change {
+  font-size: 9px;
+  letter-spacing: 0.3px;
+  color: #5a8a96;
+}
+
+.quote-change.up {
+  color: #7cf6a0;
+  text-shadow: 0 0 4px rgba(124, 246, 160, 0.45);
+}
+
+.quote-change.down {
+  color: #ff2a6d;
+  text-shadow: 0 0 4px rgba(255, 42, 109, 0.45);
+}
+
+/* ボタン化されているモジュールは padding を横方向だけに寄せる */
+.cpu,
+.memory,
+.volume,
+.battery,
+.network,
+.temperature,
+.market,
+.weather,
+.ip,
+.netspeed,
+.clock,
+.notification,
+.idle-inhibitor {
+  padding: 0 7px;
+  min-height: 19px;
+}
+
+/* アイコンは字形ごとに幅が違うので、枠を与えて数値の開始位置を揃える */
+.mod-icon {
+  font-size: 12px;
+  min-width: 15px;
+}
+
+.mod-value {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.mod-value.ssid {
+  letter-spacing: 0.8px;
+}
+
+.temp-name,
+.market-name {
+  color: #5a8a96;
+  font-size: 10px;
+  letter-spacing: 1px;
+  min-width: 34px;
+}
+
+.temp-value,
+.market-price,
+.market-change {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.temp-value {
+  color: #ff5544;
+  text-shadow: 0 0 4px rgba(255, 85, 68, 0.4);
+}
+
+.temp-value.warning {
+  color: #ffb627;
+  text-shadow: 0 0 6px rgba(255, 182, 39, 0.6);
+}
+
+.temp-value.critical {
+  color: #ff2a6d;
+  text-shadow: 0 0 8px rgba(255, 42, 109, 0.9);
+}
+
+.market-price,
+.forex-price {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #ffb627;
+  text-shadow: 0 0 4px rgba(255, 182, 39, 0.35);
+}
+
+.market-change.up {
+  color: #7cf6a0;
+  text-shadow: 0 0 5px rgba(124, 246, 160, 0.5);
+}
+
+.market-change.down {
+  color: #ff2a6d;
+  text-shadow: 0 0 5px rgba(255, 42, 109, 0.5);
+}
+
+.ip-line {
+  color: #b47cf6;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 4px rgba(180, 124, 246, 0.3);
+}
+
+.ip-line.v6 {
+  color: #7a5bb8;
+}
+
+/* 日付は控えめに、時刻は大きく。行高の合計は他の島 (18px x 2) と同じ 36px に保つ */
+.clock-row-date {
+  min-height: 14px;
+}
+
+.clock-row-time {
+  min-height: 24px;
+}
+
+.clock-date {
+  color: #5fd8e8;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+}
+
+.clock-time {
+  color: #00f0ff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.net-down.mod-value,
+.net-down.mod-icon {
+  color: #00f0ff;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.45);
+}
+
+.net-up.mod-value,
+.net-up.mod-icon {
+  color: #ff2a6d;
+  text-shadow: 0 0 4px rgba(255, 42, 109, 0.45);
+}

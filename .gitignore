@@ -5,6 +5,15 @@
 # white list
 !/.gitignore
 
+!/ags
+/ags/*
+!/ags/app.ts
+!/ags/env.d.ts
+!/ags/package.json
+!/ags/style.css
+!/ags/tsconfig.json
+!/ags/widget
+
 !/chromium-flags.conf
 
 !/electron-flags.conf
