@@ -1792,8 +1792,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             <Clock onToggle={toggleHud("clock")} />
           </box>
           <box class="island island-tray" valign={Gtk.Align.CENTER}>
-            <Notification />
             <Tray />
+            <Notification />
             <IdleInhibitor />
           </box>
         </box>
