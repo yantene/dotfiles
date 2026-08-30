@@ -1,295 +1,321 @@
 /* ═══════════════════════════════════════════════════════════════
-   SwayNC Theme - Colors matched to Waybar theme
+   SwayNC — ags バーと同じサイバーパンクのパレット
+
+   背景     #05080f
+   シアン   #00f0ff   主系統・枠・見出し
+   マゼンタ #ff2a6d   critical
+   ゴールド #ffb627   low
+   文字     #7de3ef
+   ミュート #2f5563
    ═══════════════════════════════════════════════════════════════ */
 
-:root {
-  --notification-icon-size: 64px;
+* {
+  font-family: "Hack Nerd Font", "Symbols Nerd Font", "Noto Sans CJK JP", monospace;
+  letter-spacing: 0.4px;
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes alert-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+
+.blank-window {
+  background: transparent;
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Notification Popup
+   通知ポップアップ
    ───────────────────────────────────────────────────────────────── */
-
 .notification-row {
   outline: none;
-  animation: fade-in 250ms ease-out;
+  animation: fade-in 220ms ease-out;
+}
+
+.notification {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  margin: 5px 10px;
+  padding: 0;
+  background-color: rgba(5, 8, 15, 0.97);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 240, 255, 0.035) 0px,
+    rgba(0, 240, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.18);
 }
 
 .notification-row:focus .notification,
 .notification-row:hover .notification {
-  background: #1e2a2ef0;
-}
-
-.notification {
-  border-radius: 12px;
-  border: 2px solid #4dd0e1;
-  margin: 4px 8px;
-  padding: 0;
-  background: #1a2327f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  background-color: rgba(10, 20, 30, 0.98);
+  border: 1px solid rgba(0, 240, 255, 0.7);
+  box-shadow: 0 0 32px rgba(0, 240, 255, 0.3);
 }
 
 .notification-content {
-  padding: 12px 16px;
+  padding: 12px 14px;
+  background: transparent;
 }
 
 .notification-default-action,
 .notification-action {
   border: none;
   background: transparent;
-  color: #e0f2f1;
+  color: #7de3ef;
   padding: 0;
   margin: 0;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .notification-default-action:hover,
 .notification-action:hover {
-  background: rgba(77, 208, 225, 0.12);
+  background-color: rgba(0, 240, 255, 0.12);
 }
 
-/* Close button */
-.close-button {
-  background: #37474f;
-  color: #b2dfdb;
-  border: none;
-  border-radius: 50%;
-  min-width: 24px;
-  min-height: 24px;
-  margin: 4px;
-  padding: 0;
-}
-
-.close-button:hover {
-  background: #546e7a;
-  color: #e0f2f1;
-}
-
-/* Typography */
-.summary {
-  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: #e0f2f1;
-}
-
-.body {
-  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  color: #b2dfdb;
-}
-
-.time {
-  font-size: 11px;
-  color: #80cbc4;
-  margin-right: 8px;
-}
-
-.app-name {
-  font-size: 11px;
-  font-weight: 500;
-  color: #80cbc4;
-}
-
-/* Image */
-.image {
-  margin: 4px 8px 4px 4px;
-  border-radius: 8px;
-}
-
-/* Inline replies */
-.inline-reply {
-  border-radius: 8px;
-  border: 1px solid #37474f;
-  background: #263238;
-  color: #e0f2f1;
-  margin: 4px 8px 8px;
-  padding: 6px 10px;
-}
-
-.inline-reply:focus {
-  border-color: #4dd0e1;
-}
-
-/* Action buttons */
 .notification-action {
-  border-top: 1px solid #37474f;
-  color: #4dd0e1;
-  padding: 8px;
+  border-top: 1px solid rgba(0, 240, 255, 0.18);
+  border-radius: 0;
+  padding: 7px 0;
+  color: #5fd8e8;
   font-size: 12px;
 }
 
 .notification-action:first-child {
-  border-radius: 0 0 0 12px;
+  border-bottom-left-radius: 10px;
 }
 
 .notification-action:last-child {
-  border-radius: 0 0 12px 0;
+  border-bottom-right-radius: 10px;
+}
+
+/* テキスト */
+.summary {
+  color: #00f0ff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.body {
+  color: #7de3ef;
+  font-size: 12px;
+  text-shadow: 0 0 4px rgba(0, 240, 255, 0.25);
+}
+
+.app-name {
+  color: #5a8a96;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.time {
+  color: #5a8a96;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-right: 20px;
+}
+
+.image {
+  border-radius: 8px;
+  margin: 4px 10px 4px 0;
+}
+
+/* 閉じるボタン */
+.close-button {
+  background-color: rgba(255, 42, 109, 0.15);
+  color: #ff2a6d;
+  border: none;
+  border-radius: 6px;
+  margin: 6px;
+  padding: 2px;
+  min-width: 22px;
+  min-height: 22px;
+  transition: all 0.18s ease;
+}
+
+.close-button:hover {
+  background-color: #ff2a6d;
+  color: #05080f;
+  box-shadow: 0 0 12px rgba(255, 42, 109, 0.7);
+}
+
+/* 重要度 */
+.notification.critical {
+  border: 1px solid rgba(255, 42, 109, 0.8);
+  box-shadow: 0 0 28px rgba(255, 42, 109, 0.35);
+}
+
+.notification.critical .summary {
+  color: #ff2a6d;
+  text-shadow: 0 0 10px rgba(255, 42, 109, 0.9);
+  animation: alert-pulse 1.2s ease-in-out infinite alternate;
+}
+
+.notification.low {
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.notification.low .summary {
+  color: #5fd8e8;
+  text-shadow: none;
+}
+
+/* インライン返信 */
+.inline-reply {
+  margin-top: 8px;
+}
+
+.inline-reply entry {
+  background-color: rgba(0, 240, 255, 0.06);
+  color: #7de3ef;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 6px;
+  padding: 5px 8px;
+  caret-color: #00f0ff;
+}
+
+.inline-reply entry:focus {
+  border: 1px solid #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.35);
+}
+
+.inline-reply button {
+  background-color: rgba(0, 240, 255, 0.12);
+  color: #00f0ff;
+  border: none;
+  border-radius: 6px;
+  margin-left: 5px;
+  padding: 5px 12px;
+}
+
+.inline-reply button:hover {
+  background-color: rgba(0, 240, 255, 0.24);
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Urgency Levels
+   通知センター本体
    ───────────────────────────────────────────────────────────────── */
-
-.low {
-  border-color: #546e7a;
-}
-
-.low .summary,
-.low .body {
-  color: #b2dfdb;
-}
-
-.normal {
-  border-color: #4dd0e1;
-}
-
-.critical {
-  border-color: #ef5350;
-  background: #2a1a1af0;
-}
-
-.critical .summary,
-.critical .body {
-  color: #ffcdd2;
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   App-specific Border Colors
-   ───────────────────────────────────────────────────────────────── */
-
-.notification.Spotify {
-  border-color: #1db954;
-  background: #1a231df0;
-}
-
-.notification.Discord {
-  border-color: #5865f2;
-  background: #1a1a27f0;
-}
-
-.notification.Firefox {
-  border-color: #ff7139;
-}
-
-.notification.Slack {
-  border-color: #4a154b;
-  background: #231a23f0;
-}
-
-.notification.Thunderbird {
-  border-color: #0a84ff;
-}
-
-.notification.KDE.Connect {
-  border-color: #1d99f3;
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   Control Center (Notification Panel)
-   ───────────────────────────────────────────────────────────────── */
-
 .control-center {
-  background: #1a2327f0;
-  border-radius: 12px 0 0 12px;
-  border: 1px solid #37474f;
-  border-right: none;
-  margin: 8px 0 8px 8px;
-  padding: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  background-color: rgba(5, 8, 15, 0.97);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 240, 255, 0.03) 0px,
+    rgba(0, 240, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 0 44px rgba(0, 240, 255, 0.22);
+  padding: 12px;
+  margin: 8px;
 }
 
-/* Title widget */
+.control-center .notification-row .notification {
+  margin: 4px 2px;
+}
+
 .widget-title {
-  font-family: "Google Sans", "Roboto", "Noto Sans CJK JP", sans-serif;
-  color: #e0f2f1;
+  color: #00f0ff;
   font-size: 14px;
-  font-weight: 500;
-  margin: 4px 8px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  padding: 4px 6px 10px 6px;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
 }
 
 .widget-title > button {
-  background: #37474f;
-  color: #b2dfdb;
-  border: none;
-  border-radius: 8px;
+  background-color: rgba(0, 240, 255, 0.1);
+  color: #5fd8e8;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 6px;
+  font-size: 11px;
+  letter-spacing: 1px;
   padding: 4px 12px;
-  font-size: 12px;
+  transition: all 0.18s ease;
 }
 
 .widget-title > button:hover {
-  background: #546e7a;
-  color: #e0f2f1;
+  background-color: rgba(255, 42, 109, 0.18);
+  border: 1px solid rgba(255, 42, 109, 0.6);
+  color: #ff2a6d;
 }
 
-/* DND widget */
+/* おやすみモード */
 .widget-dnd {
-  margin: 4px 8px;
-  padding: 4px 0;
-  font-size: 13px;
-  color: #b2dfdb;
+  color: #5fd8e8;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 6px;
 }
 
 .widget-dnd > switch {
-  background: #37474f;
-  border: none;
+  background-color: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.3);
   border-radius: 12px;
+  min-height: 20px;
 }
 
 .widget-dnd > switch:checked {
-  background: #004d40;
+  background-color: rgba(255, 182, 39, 0.3);
+  border: 1px solid #ffb627;
+  box-shadow: 0 0 10px rgba(255, 182, 39, 0.4);
 }
 
 .widget-dnd > switch slider {
-  background: #b2dfdb;
-  border-radius: 50%;
+  background-color: #5fd8e8;
+  border-radius: 10px;
   min-width: 16px;
   min-height: 16px;
 }
 
 .widget-dnd > switch:checked slider {
-  background: #4dd0e1;
+  background-color: #ffb627;
 }
 
-/* Notification group */
+/* 通知グループ */
 .notification-group {
   margin: 2px 0;
 }
 
 .notification-group-headers {
-  font-size: 12px;
-  font-weight: 500;
-  color: #80cbc4;
-  padding: 4px 8px;
+  color: #5a8a96;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 2px 8px;
 }
 
 .notification-group-icon {
-  margin-right: 8px;
+  color: #00f0ff;
 }
 
 .notification-group-collapse-button {
-  background: transparent;
-  color: #80cbc4;
+  background-color: transparent;
+  color: #5a8a96;
   border: none;
-  padding: 4px;
+  border-radius: 6px;
+  padding: 2px 8px;
 }
 
 .notification-group-collapse-button:hover {
-  color: #e0f2f1;
-}
-
-/* Notification items in control center */
-.control-center .notification-row .notification-background .notification {
-  background: #1e2a2e;
-}
-
-/* Blank window behind control center */
-.blank-window {
-  background: transparent;
+  background-color: rgba(0, 240, 255, 0.12);
+  color: #00f0ff;
 }

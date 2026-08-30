@@ -7,14 +7,17 @@ hl.config({
     gaps_out = 8,
     border_size = 2,
     col = {
-      active_border = "rgba(4dd0e1ee)",
-      inactive_border = "rgba(37474fee)",
+      -- ags バーと同じシアン。フォーカス中はマゼンタへのグラデーション。
+      -- Lua 設定では "色 色 角度" の文字列ではなく colors 配列で渡す
+      active_border = { colors = { "rgba(00f0ffee)", "rgba(ff2a6dcc)" }, angle = 45 },
+      inactive_border = "rgba(14303aee)",
     },
     layout = "dwindle",
   },
 
   decoration = {
-    rounding = 5,
+    -- ags バーの島 (8px) に合わせる
+    rounding = 8,
 
     blur = {
       enabled = true,
@@ -24,8 +27,10 @@ hl.config({
 
     shadow = {
       enabled = true,
-      range = 8,
-      color = "rgba(00000040)",
+      range = 12,
+      render_power = 3,
+      color = "rgba(00f0ff33)",
+      color_inactive = "rgba(00000055)",
     },
   },
 
@@ -41,7 +46,7 @@ hl.config({
   misc = {
     disable_hyprland_logo = true,
     disable_splash_rendering = true,
-    background_color = "rgb(0f0f0f)",
+    background_color = "rgb(05080f)",
     vrr = 0,
     focus_on_activate = true,
     animate_manual_resizes = true,

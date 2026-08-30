@@ -1,26 +1,45 @@
+/* ═══════════════════════════════════════════════════════════════
+   wofi — ags バーと同じサイバーパンクのパレット
+   wofi は GTK3 ベースなので、GTK4 で使える指定が一部通らない
+   ═══════════════════════════════════════════════════════════════ */
+
+* {
+  font-family: "Hack Nerd Font", "Symbols Nerd Font", "Noto Sans CJK JP", monospace;
+  font-size: 13px;
+}
+
 window {
   margin: 0px;
-  border: 1px solid #bd93f9;
-  background-color: #282a36;
-}
-
-#input {
-  margin: 5px;
-  border: none;
-  color: #f8f8f2;
-  background-color: #44475a;
-}
-
-#inner-box {
-  margin: 5px;
-  border: none;
-  background-color: #282a36;
+  border: 1px solid rgba(0, 240, 255, 0.45);
+  border-radius: 12px;
+  background-color: rgba(5, 8, 15, 0.97);
+  color: #7de3ef;
 }
 
 #outer-box {
-  margin: 5px;
+  margin: 10px;
   border: none;
-  background-color: #282a36;
+  background: transparent;
+}
+
+#input {
+  margin: 0px 0px 8px 0px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  color: #00f0ff;
+  background-color: rgba(0, 240, 255, 0.06);
+  caret-color: #00f0ff;
+}
+
+#input:focus {
+  border: 1px solid rgba(0, 240, 255, 0.8);
+}
+
+#inner-box {
+  margin: 0px;
+  border: none;
+  background: transparent;
 }
 
 #scroll {
@@ -29,11 +48,39 @@ window {
 }
 
 #text {
-  margin: 5px;
+  margin: 0px 8px;
   border: none;
-  color: #f8f8f2;
-} 
+  color: #7de3ef;
+}
+
+#entry {
+  padding: 6px 4px;
+  border-radius: 8px;
+  border-left: 2px solid transparent;
+}
 
 #entry:selected {
-  background-color: #44475a;
+  background-color: rgba(0, 240, 255, 0.14);
+  border-left: 2px solid #00f0ff;
+}
+
+#entry:selected #text {
+  color: #ffffff;
+  background-color: transparent;
+}
+
+/* GTK3 既定のテキスト選択ハイライトを消す */
+#text:selected,
+#entry #text selection,
+label selection {
+  background-color: transparent;
+  color: #ffffff;
+}
+
+#unselected {
+  color: #7de3ef;
+}
+
+#selected {
+  color: #ffffff;
 }
