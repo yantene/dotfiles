@@ -9,7 +9,9 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 
   -- Status bar
-  hl.exec_cmd("waybar")
+  -- waybar から AGS (~/.config/ags) へ移行。戻す場合は下の行を入れ替える
+  -- hl.exec_cmd("waybar")
+  hl.exec_cmd("ags run")
 
   -- Input method
   hl.exec_cmd("fcitx5")
