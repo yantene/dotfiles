@@ -1053,31 +1053,126 @@ function Memory({ onToggle }: { onToggle: (x: number) => void }) {
 }
 
 /**
- * hwmon の番号は起動ごとに変わるため、チップ名から引く。
+ * hwmon の番号は起動ごとに変わるうえ、チップ名もマシンによって違う。
+ * Intel なら coretemp、AMD なら k10temp というように、CPU ベンダーで名前が変わる。
+ * この設定は複数マシンで共用しているので、名前を決め打ちせず候補を優先順に探す。
  * waybar は /sys/class/hwmon/hwmon6/temp1_input を直書きしていた。
  */
-function findHwmon(chip: string, sensor = "temp1"): string | null {
+type TempSource = {
+  /** 行に出す名前 */
+  name: string
+  /** hwmon の name にかけるパターン。iwlwifi_1 のように末尾番号が変わるものがある */
+  chip: RegExp
+  /** 同じチップが複数の温度を出す場合に、どのラベルを採るか */
+  label?: RegExp
+}
+
+/** coretemp は Package id 0 がパッケージ全体、それ以外はコア個別の温度になる */
+const CPU_TEMP_SOURCES: TempSource[] = [
+  { name: "CPU", chip: /^coretemp$/, label: /^Package id/ },
+  { name: "CPU", chip: /^k10temp$/, label: /^(Tctl|Tdie)/ },
+  { name: "CPU", chip: /^zenpower$/, label: /^Tdie/ },
+  { name: "CPU", chip: /^cpu_thermal$/ },
+  // どれも無いマシン向けの最後の手段。ACPI のサーマルゾーンは精度も意味も曖昧
+  { name: "CPU", chip: /^acpitz$/ },
+]
+
+/**
+ * 2 行目に出す候補。GPU を優先しつつ、見つからなければ実在する別のセンサーに落とす。
+ * 統合 GPU は CPU ダイに同居していて独立した hwmon を持たないことが多く、
+ * その場合 GPU 温度という値がそもそも存在しないため 0℃ を出し続けることになる。
+ */
+const AUX_TEMP_SOURCES: TempSource[] = [
+  { name: "GPU", chip: /^amdgpu$/, label: /^edge/ },
+  { name: "GPU", chip: /^i915$/ },
+  { name: "GPU", chip: /^xe$/ },
+  { name: "GPU", chip: /^nouveau$/ },
+  { name: "GPU", chip: /^nvidia$/ },
+  { name: "SSD", chip: /^nvme$/, label: /^Composite/ },
+  { name: "WIFI", chip: /^iwlwifi/ },
+  { name: "ACPI", chip: /^acpitz$/ },
+]
+
+/** ディレクトリ直下の temp*_input を番号順で返す */
+function tempInputs(dir: string): string[] {
+  const iter = Gio.File.new_for_path(dir).enumerate_children(
+    "standard::name",
+    Gio.FileQueryInfoFlags.NONE,
+    null,
+  )
+  const names: string[] = []
+  let e: Gio.FileInfo | null
+  while ((e = iter.next_file(null)) !== null) {
+    if (/^temp\d+_input$/.test(e.get_name())) names.push(e.get_name())
+  }
+  iter.close(null)
+  return names.sort((a, b) => Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0]))
+}
+
+/** exclude を渡すと、そのパスに解決される候補を飛ばして次を探す */
+function findTemp(sources: TempSource[], exclude?: string): { name: string; path: string } | null {
   const base = "/sys/class/hwmon"
-  const dir = Gio.File.new_for_path(base)
-  const iter = dir.enumerate_children("standard::name", Gio.FileQueryInfoFlags.NONE, null)
+  const chips: { name: string; dir: string }[] = []
+
+  const iter = Gio.File.new_for_path(base).enumerate_children(
+    "standard::name",
+    Gio.FileQueryInfoFlags.NONE,
+    null,
+  )
   let info: Gio.FileInfo | null
   while ((info = iter.next_file(null)) !== null) {
-    const path = `${base}/${info.get_name()}`
+    const dir = `${base}/${info.get_name()}`
     try {
-      if (readFile(`${path}/name`).trim() === chip) return `${path}/${sensor}_input`
+      chips.push({ name: readFile(`${dir}/name`).trim(), dir })
     } catch {
       // name を持たない hwmon は読み飛ばす
     }
   }
+  iter.close(null)
+  chips.sort((a, b) => a.dir.localeCompare(b.dir, undefined, { numeric: true }))
+
+  for (const source of sources) {
+    const chip = chips.find((c) => source.chip.test(c.name))
+    if (!chip) continue
+
+    const inputs = tempInputs(chip.dir)
+    if (inputs.length === 0) continue
+
+    let picked: string | null = null
+
+    if (source.label) {
+      for (const input of inputs) {
+        try {
+          if (source.label.test(readFile(`${chip.dir}/${input.replace("_input", "_label")}`).trim())) {
+            picked = `${chip.dir}/${input}`
+            break
+          }
+        } catch {
+          // label を持たないセンサーは飛ばす
+        }
+      }
+    }
+
+    // ラベル指定が無い、または一致しなかった場合は最小番号を採る
+    picked ??= `${chip.dir}/${inputs[0]}`
+
+    if (picked === exclude) continue
+    return { name: source.name, path: picked }
+  }
+
   return null
 }
 
 function Temperature({ onToggle }: { onToggle: (x: number) => void }) {
-  const cpuPath = findHwmon("k10temp")
-  const gpuPath = findHwmon("amdgpu")
+  const primary = findTemp(CPU_TEMP_SOURCES)
+  // acpitz しか無いマシンだと 1 行目と 2 行目が同じセンサーになるので除外して探す
+  const secondary = findTemp(AUX_TEMP_SOURCES, primary?.path)
 
-  const read = (path: string | null) => (path ? Number(readFile(path)) / 1000 : 0)
-  const temps = createPoll({ cpu: 0, gpu: 0 }, 2000, () => ({ cpu: read(cpuPath), gpu: read(gpuPath) }))
+  const read = (src: { path: string } | null) => (src ? Number(readFile(src.path)) / 1000 : 0)
+  const temps = createPoll({ cpu: 0, gpu: 0 }, 2000, () => ({
+    cpu: read(primary),
+    gpu: read(secondary),
+  }))
 
   const row = (name: string, value: Accessor<number>) => (
     <box class="mod-row" spacing={4}>
@@ -1092,8 +1187,8 @@ function Temperature({ onToggle }: { onToggle: (x: number) => void }) {
   return (
     <HudButton cls="temperature" onToggle={onToggle}>
       <box orientation={Gtk.Orientation.VERTICAL} valign={Gtk.Align.CENTER}>
-        {row("CPU", temps((t) => t.cpu))}
-        {row("GPU", temps((t) => t.gpu))}
+        {row(primary?.name ?? "CPU", temps((t) => t.cpu))}
+        {secondary ? row(secondary.name, temps((t) => t.gpu)) : null}
       </box>
     </HudButton>
   )
