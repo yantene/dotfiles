@@ -1648,12 +1648,13 @@ function Clock({ onToggle }: { onToggle: (x: number) => void }) {
   return (
     <HudButton cls="clock" onToggle={onToggle}>
       <box orientation={Gtk.Orientation.VERTICAL} valign={Gtk.Align.CENTER}>
+        {/* hexpand を付けるとラベルから島、さらに centerbox の end へと伝播して
+            バーの余り幅を全部この島が吸ってしまう。halign だけで 2 行の右端は揃う */}
         <box class="mod-row clock-row-date">
           <label
             class="clock-date"
             label={tick(() => GLib.DateTime.new_now_local().format("%Y-%m-%d %a")!)}
             halign={Gtk.Align.END}
-            hexpand
           />
         </box>
         <box class="mod-row clock-row-time">
@@ -1661,7 +1662,6 @@ function Clock({ onToggle }: { onToggle: (x: number) => void }) {
             class="clock-time"
             label={tick(() => GLib.DateTime.new_now_local().format("%H:%M:%S")!)}
             halign={Gtk.Align.END}
-            hexpand
           />
         </box>
       </box>
