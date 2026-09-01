@@ -1592,29 +1592,38 @@ function TrayItem({ item }: { item: AstalTray.TrayItem }) {
         self.insert_action_group("dbusmenu", item.actionGroup)
 
         let menu: Gtk.PopoverMenu | null = null
-        // menuModel が差し替わるたびに PopoverMenu を作り直すと、GtkStack に
-        // 同名ページを重ねて警告が出る。既存の popover にモデルだけ差し替える。
-        const syncMenu = () => {
+        // fcitx5 (Mozc) は notify::menu-model を毎秒 5 回近く飛ばしてくる。
+        // その度に set_menu_model を呼ぶと PopoverMenu が内部の GtkStack を
+        // 組み直し、同名ページの追加に失敗した分のウィジェットが毎秒 1MB 積もる。
+        // 30 分ほどでヒープが 1.7GB に達しメインループが停止した。
+        // 通知では dirty を立てるだけにして、実際の再構築はメニューを開く時に遅らせる。
+        let dirty = true
+
+        const ensureMenu = () => {
           if (!item.menuModel) {
             menu?.unparent()
             menu = null
+            dirty = false
             return
           }
-          if (menu) {
-            menu.set_menu_model(item.menuModel)
-          } else {
+          if (!menu) {
             menu = Gtk.PopoverMenu.new_from_model(item.menuModel)
             menu.set_parent(self)
+          } else if (dirty) {
+            menu.set_menu_model(item.menuModel)
           }
+          dirty = false
         }
-        syncMenu()
-        const handler = item.connect("notify::menu-model", syncMenu)
+
+        const handler = item.connect("notify::menu-model", () => {
+          dirty = true
+        })
 
         const openMenu = () => {
-          if (!menu) return
           // dbusmenu の作法。開く直前にアプリ側へ通知して中身を更新させる
           item.about_to_show()
-          menu.popup()
+          ensureMenu()
+          menu?.popup()
         }
 
         const rightClick = new Gtk.GestureClick({ button: 3 })
