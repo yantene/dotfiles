@@ -3,20 +3,27 @@
 --
 -- See: https://wiki.hypr.land/Configuring/Basics/Monitors/
 --      https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
+--
+-- Tip: prefer `desc:<make> <model> <serial>` over port names (DP-1 etc.)
+-- so the config survives when the GPU reassigns ports. Get descriptions
+-- with `hyprctl monitors`.
 
--- Example: Triple monitor setup
--- hl.monitor({ output = "DP-1", mode = "preferred", position = "-2560x360", scale = 1 })
--- hl.workspace_rule({ workspace = "1", monitor = "DP-1", default = true })
--- hl.workspace_rule({ workspace = "2", monitor = "DP-1" })
--- hl.workspace_rule({ workspace = "3", monitor = "DP-1" })
+-- Example: Triple monitor setup (left / center / right)
+-- local left = "desc:Iiyama North America PL2875UH 0x000004AC"
+-- hl.monitor({ output = left, mode = "preferred", position = "0x0", scale = 1 })
+-- hl.workspace_rule({ workspace = "1", monitor = left, default = true })
+-- hl.workspace_rule({ workspace = "2", monitor = left })
+-- hl.workspace_rule({ workspace = "3", monitor = left })
 --
--- hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "0x0", scale = 1 })
--- hl.workspace_rule({ workspace = "4", monitor = "HDMI-A-1", default = true })
--- hl.workspace_rule({ workspace = "5", monitor = "HDMI-A-1" })
--- hl.workspace_rule({ workspace = "6", monitor = "HDMI-A-1" })
--- hl.workspace_rule({ workspace = "7", monitor = "HDMI-A-1" })
+-- local center = "desc:Iiyama North America PL3288UH 1169614420519"
+-- hl.monitor({ output = center, mode = "preferred", position = "3840x0", scale = 1 })
+-- hl.workspace_rule({ workspace = "4", monitor = center, default = true })
+-- hl.workspace_rule({ workspace = "5", monitor = center })
+-- hl.workspace_rule({ workspace = "6", monitor = center })
+-- hl.workspace_rule({ workspace = "7", monitor = center })
 --
--- hl.monitor({ output = "eDP-1", mode = "preferred", position = "3840x0", scale = 1 })
--- hl.workspace_rule({ workspace = "8", monitor = "eDP-1", default = true })
--- hl.workspace_rule({ workspace = "9", monitor = "eDP-1" })
--- hl.workspace_rule({ workspace = "10", monitor = "eDP-1" })
+-- local right = "desc:AU Optronics 0x5D2D"
+-- hl.monitor({ output = right, mode = "preferred", position = "7680x0", scale = 1 })
+-- hl.workspace_rule({ workspace = "8", monitor = right, default = true })
+-- hl.workspace_rule({ workspace = "9", monitor = right })
+-- hl.workspace_rule({ workspace = "10", monitor = right })
