@@ -47,7 +47,7 @@ hl.config({
     disable_hyprland_logo = true,
     disable_splash_rendering = true,
     background_color = "rgb(05080f)",
-    vrr = 0,
+    vrr = 2,
     focus_on_activate = true,
     animate_manual_resizes = true,
     animate_mouse_windowdragging = false,
@@ -55,6 +55,7 @@ hl.config({
 
   cursor = {
     hide_on_key_press = true,
+    no_hardware_cursors = true,
   },
 
   -- カラーマネジメント無効化 (モニタ切替時のクラッシュ回避 GitHub #12871)
