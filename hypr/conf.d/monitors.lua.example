@@ -7,15 +7,21 @@
 -- Tip: prefer `desc:<make> <model> <serial>` over port names (DP-1 etc.)
 -- so the config survives when the GPU reassigns ports. Get descriptions
 -- with `hyprctl monitors`.
+--
+-- Caveat: the make part is the EDID PnP ID resolved through hwdata's pnp.ids,
+-- so it changes when hwdata does -- IVM went from "Iiyama North America" to
+-- "iiyama Corporation" in hwdata 0.411. A stale make matches nothing and fails
+-- silently, leaving the default layout, so re-check the description against
+-- `hyprctl monitors` whenever the arrangement reverts on its own.
 
 -- Example: Triple monitor setup (left / center / right)
--- local left = "desc:Iiyama North America PL2875UH 0x000004AC"
+-- local left = "desc:iiyama Corporation PL2875UH 0x000004AC"
 -- hl.monitor({ output = left, mode = "preferred", position = "0x0", scale = 1 })
 -- hl.workspace_rule({ workspace = "1", monitor = left, default = true })
 -- hl.workspace_rule({ workspace = "2", monitor = left })
 -- hl.workspace_rule({ workspace = "3", monitor = left })
 --
--- local center = "desc:Iiyama North America PL3288UH 1169614420519"
+-- local center = "desc:iiyama Corporation PL3288UH 1169614420519"
 -- hl.monitor({ output = center, mode = "preferred", position = "3840x0", scale = 1 })
 -- hl.workspace_rule({ workspace = "4", monitor = center, default = true })
 -- hl.workspace_rule({ workspace = "5", monitor = center })
