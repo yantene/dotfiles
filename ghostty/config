@@ -45,3 +45,6 @@ keybind = ctrl+down=resize_split:down,10
 keybind = ctrl+t>c=new_tab
 keybind = ctrl+t>n=next_tab
 keybind = ctrl+t>p=previous_tab
+
+# Ctrl+Enter はアプリに渡す (既定の toggle_fullscreen を外す)
+keybind = ctrl+enter=unbind
