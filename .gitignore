@@ -41,6 +41,10 @@
 /git/*
 !/git/config
 
+!/herdr
+/herdr/*
+!/herdr/config.toml
+
 !/hypr
 /hypr/*
 !/hypr/bin

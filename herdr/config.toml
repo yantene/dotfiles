@@ -1,0 +1,32 @@
+onboarding = false
+
+[keys]
+# タブの操作 (prefix+c / prefix+n / prefix+p) に Ctrl を足すとワークスペースの操作
+new_workspace = "prefix+ctrl+c"
+previous_workspace = "prefix+ctrl+p"
+next_workspace = "prefix+ctrl+n"
+
+[ui]
+# 案件ごとにワークスペースを分けたので、タブが 1 枚のときはタブバーを隠す
+hide_tab_bar_when_single_tab = true
+# キーでワークスペースを作るときに名前を聞く
+prompt_new_workspace_name = true
+# エージェント一覧を、自分の対応が要る順に並べる
+agent_panel_sort = "priority"
+# 状態を色の点ではなく形の違う記号で出す
+status_indicators = "symbols"
+
+# Claude の行は 2 段。1 段目に状態とワークスペース、2 段目に Claude が出している作業内容 (端末タイトル)
+[ui.sidebar.agents.rows_by_agent]
+# 入力待ち (blocked) は赤の太字、完了 (done) は緑にする
+claude = [
+  ["state_icon", "workspace", { token = "state_text", dim = true, rules = [{ starts_with = "blocked", fg = "#f38ba8", bold = true, dim = false }, { starts_with = "done", fg = "#a6e3a1", dim = false }] }],
+  [{ token = "terminal_title_stripped", dim = true }],
+]
+
+# 通知と音は Claude Code の hook (~/.claude/hooks/herdr-notify.sh) が出す。herdr の通知は中身を変えられないため止める
+[ui.toast]
+delivery = "off"
+
+[ui.sound]
+enabled = false
