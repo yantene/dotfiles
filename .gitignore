@@ -14,6 +14,10 @@
 !/ags/tsconfig.json
 !/ags/widget
 
+!/claude
+/claude/*
+!/claude/hooks
+
 !/chromium-flags.conf
 
 !/electron-flags.conf
