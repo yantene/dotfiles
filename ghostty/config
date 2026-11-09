@@ -48,6 +48,4 @@ keybind = ctrl+t>p=previous_tab
 
 # Claude Code と衝突するデフォルトを外す
 # - ctrl+enter: chat:sendNow (Ghostty のデフォルトは全画面切り替え)
-# - ctrl+-: chat:undo (Ghostty のデフォルトは文字を小さくする)
 keybind = ctrl+enter=unbind
-keybind = ctrl+-=unbind
